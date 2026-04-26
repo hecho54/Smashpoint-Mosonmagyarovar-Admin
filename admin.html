@@ -184,13 +184,34 @@
     .inv-cat-title:first-child{border-top:none;margin-top:0;}
 
     /* ── Responsive ── */
-    @media(max-width:768px){
-      .grid-2,.control-grid{grid-template-columns:1fr;}
-      .grid-3,.grid-4{grid-template-columns:1fr 1fr;}
+    @media(max-width:900px){
+      .grid-2{grid-template-columns:1fr;}
+      .control-grid{grid-template-columns:1fr;}
+      .grid-4{grid-template-columns:1fr 1fr;}
     }
-    @media(max-width:480px){
-      .grid-3,.grid-4{grid-template-columns:1fr;}
+    @media(max-width:600px){
+      .hdr{padding:0 1rem;height:auto;flex-wrap:wrap;gap:0.5rem;padding-top:0.6rem;padding-bottom:0.6rem;}
+      .hdr-logo{font-size:1rem;}
+      .hdr-sub{display:none;}
+      .back-btn{font-size:0.72rem;padding:0.3rem 0.6rem;}
       .admin-body{padding:1rem;}
+      .grid-4{grid-template-columns:1fr 1fr;}
+      .stat-val{font-size:1.5rem;}
+      .card{padding:1rem;}
+      .control-card{padding:1rem;}
+      .section-title{font-size:0.95rem;}
+      .big-btn{font-size:0.82rem;padding:0.75rem;}
+      .date-filter{gap:0.35rem;}
+      .df-btn{font-size:0.72rem;padding:0.28rem 0.65rem;}
+      .bar-label{min-width:90px;font-size:0.7rem;}
+      .toggle-name{font-size:0.82rem;}
+      .toggle-price{font-size:0.7rem;}
+      h2.section-title{font-size:1rem;}
+    }
+    @media(max-width:400px){
+      .grid-4{grid-template-columns:1fr;}
+      .stat-card{flex-direction:row;align-items:center;gap:1rem;}
+      .stat-val{font-size:1.3rem;}
     }
   </style>
 </head>
