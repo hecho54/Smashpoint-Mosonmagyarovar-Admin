@@ -314,7 +314,10 @@
     .o-main{
       display:flex;align-items:center;gap:0.5rem;
       padding:0.5rem 0.6rem;
+      cursor:pointer;
+      user-select:none;
     }
+    .o-main:hover{background:rgba(255,255,255,0.03);}
 
     .o-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
     .col-new    .o-dot{background:var(--orange);}
@@ -347,14 +350,14 @@
     .o-spacer{flex:1;}
 
     .o-expand{
-      background:none;border:1px solid var(--border);
-      color:var(--muted);width:22px;height:22px;
-      border-radius:5px;cursor:pointer;
+      color:var(--muted);
       display:flex;align-items:center;justify-content:center;
-      font-size:0.75rem;transition:all 0.2s;flex-shrink:0;
+      font-size:0.75rem;
+      transition:transform 0.2s, color 0.2s;
+      flex-shrink:0;
+      pointer-events:none;
     }
-    .o-expand:hover{border-color:var(--border2);color:var(--text);}
-    .o-expand.open{transform:rotate(180deg);border-color:var(--pink);color:var(--pink);}
+    .o-expand.open{transform:rotate(180deg);color:var(--pink);}
 
     /* Action buttons */
     .o-act{
@@ -1020,6 +1023,12 @@
     renderOrders(lastOrders);
   };
 
+  window.handleRowClick = (e, id) => {
+    // Ne toggelje ha action gombra kattintottak
+    if(e.target.closest('.o-act, .btn-delete, .btn-revert, .btn-close, .btn-start, .btn-done')) return;
+    toggleExpand(id);
+  };
+
   // ── Scroll to new ─────────────────────────────────────
   window.scrollToNew = () => {
     document.getElementById('cards-new').scrollTo({top:0,behavior:'smooth'});
@@ -1209,17 +1218,17 @@
 
     return `
       <div class="o-row ${urgent?'urgent':''}" id="or-${o.id}">
-        <div class="o-main">
+        <div class="o-main" onclick="handleRowClick(event,'${o.id}')">
           <span class="o-dot"></span>
           <span class="o-num">#${o.orderNumber?.replace('SP-','')||'?'}</span>
           <span class="o-type ${typeCls}">${typeTxt}</span>
           <span class="pay-badge ${payCls[o.payment]||'pay-cash'}" style="font-size:0.58rem;padding:0.1rem 0.45rem;border-radius:4px;border:1px solid;display:inline-flex;align-items:center;gap:0.25rem;">${payLabels[o.payment]||'<i class="fa-solid fa-money-bill-wave"></i> Készpénz'}</span>
           <span class="o-time ${urgent?'urgent-t':''}">
-            ⏱ ${elapsed(o.createdAt)}
+            <i class="fa-regular fa-clock"></i> ${elapsed(o.createdAt)}
             ${urgent?'<span class="o-warn red"><i class="fa-solid fa-triangle-exclamation"></i></span>':'<span class="o-warn"><i class="fa-solid fa-triangle-exclamation"></i></span>'}
           </span>
           <span class="o-spacer"></span>
-          <button class="o-expand ${expanded?'open':''}" onclick="toggleExpand('${o.id}')" title="Részletek"><i class="fa-solid fa-chevron-down"></i></button>
+          <span class="o-expand ${expanded?'open':''}"><i class="fa-solid fa-chevron-down"></i></span>
           ${actionBtn}
         </div>
         ${details}
