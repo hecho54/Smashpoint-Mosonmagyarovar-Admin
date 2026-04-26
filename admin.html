@@ -145,7 +145,25 @@
     /* ── Hour chart ── */
     .hour-chart{display:flex;align-items:flex-end;gap:3px;height:80px;margin-top:0.75rem;}
     .hour-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
-    .hour-bar{width:100%;border-radius:3px 3px 0 0;background:var(--purple);min-height:2px;transition:height 0.5s;}
+    .hour-bar{width:100%;border-radius:3px 3px 0 0;background:var(--purple);min-height:2px;transition:height 0.5s;cursor:pointer;position:relative;}
+    .hour-bar:hover{filter:brightness(1.4);}
+
+    /* Tooltip */
+    .chart-tooltip {
+      position:fixed;
+      background:var(--card2);
+      border:1px solid var(--pink);
+      border-radius:8px;
+      padding:0.45rem 0.75rem;
+      font-size:0.78rem;
+      color:var(--text);
+      pointer-events:none;
+      z-index:200;
+      white-space:nowrap;
+      box-shadow:0 4px 20px rgba(0,0,0,0.4);
+      display:none;
+    }
+    .chart-tooltip strong { color:var(--pink); font-family:'Oswald',sans-serif; font-size:1rem; }
     .hour-lbl{font-size:0.55rem;color:var(--muted);}
 
     /* ── Date filter ── */
@@ -187,6 +205,9 @@
     <a href="kds.html" class="back-btn"><i class="fa-solid fa-display"></i> KDS</a>
   </div>
 </div>
+
+<!-- Tooltip -->
+<div class="chart-tooltip" id="chart-tooltip"></div>
 
 <div class="admin-body">
 
@@ -445,7 +466,13 @@
     const hc = document.getElementById('hour-chart');
     hc.innerHTML = hourMap.map((v,i)=>`
       <div class="hour-col">
-        <div class="hour-bar" style="height:${Math.round((v/maxH)*72)}px;opacity:${v?1:0.2};${i===peakHour?'background:var(--pink);':''}" title="${i}:00 – ${v} rendelés"></div>
+        <div class="hour-bar"
+          style="height:${Math.round((v/maxH)*72)}px;opacity:${v?1:0.2};${i===peakHour?'background:var(--pink);':''}"
+          data-hour="${i}" data-count="${v}"
+          onmouseenter="showBarTip(event,${i},${v})"
+          onmousemove="moveBarTip(event)"
+          onmouseleave="hideBarTip()">
+        </div>
       </div>`).join('');
 
     // Top termékek
@@ -577,6 +604,20 @@
     const row = document.getElementById(`inv-row-${id}`);
     if(row) row.classList.toggle('out-of-stock', !available);
   };
+
+  // ── Tooltip ──────────────────────────────────────
+  const tip = document.getElementById('chart-tooltip');
+
+  window.showBarTip = (e, hour, count) => {
+    tip.innerHTML = `<strong>${hour}:00 – ${hour+1}:00</strong><br>${count} rendelés`;
+    tip.style.display = 'block';
+    moveBarTip(e);
+  };
+  window.moveBarTip = (e) => {
+    tip.style.left = (e.clientX + 12) + 'px';
+    tip.style.top  = (e.clientY - 40) + 'px';
+  };
+  window.hideBarTip = () => { tip.style.display = 'none'; };
 
   // ── Init ─────────────────────────────────────────
   loadConfig();
