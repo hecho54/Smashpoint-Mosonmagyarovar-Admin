@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin – Smash Point</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --pink:#FF1F9B; --pink-dark:#cc0c7a; --purple:#8B30C8;
+      --dark:#0D0A17; --dark2:#130D1F; --card:#1E1530; --card2:#261C3A;
+      --text:#F0ECF8; --muted:#9B8FB0; --border:#2E2045; --border2:#3D2D55;
+      --green:#10b981; --yellow:#f59e0b; --red:#ef4444; --blue:#3b82f6;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;}
+
+    /* ── Header ── */
+    .hdr{
+      background:var(--dark2);border-bottom:1px solid var(--border);
+      padding:0 1.5rem;height:60px;display:flex;align-items:center;gap:1rem;
+      position:sticky;top:0;z-index:50;
+    }
+    .hdr-logo{font-family:'Oswald',sans-serif;font-size:1.2rem;font-weight:700;color:var(--pink);letter-spacing:2px;}
+    .hdr-logo span{color:#fff;}
+    .hdr-sub{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-left:0.25rem;}
+    .hdr-right{margin-left:auto;display:flex;gap:0.5rem;align-items:center;}
+    .back-btn{
+      background:var(--card);border:1px solid var(--border);color:var(--muted);
+      border-radius:8px;padding:0.35rem 0.85rem;font-size:0.8rem;font-weight:600;
+      text-decoration:none;display:flex;align-items:center;gap:0.4rem;
+      transition:all 0.2s;
+    }
+    .back-btn:hover{border-color:var(--border2);color:var(--text);}
+
+    /* ── Layout ── */
+    .admin-body{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;}
+    .section-title{
+      font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;
+      text-transform:uppercase;color:#fff;margin-bottom:1.25rem;
+      display:flex;align-items:center;gap:0.6rem;
+    }
+    .section-title i{color:var(--pink);font-size:1rem;}
+
+    /* ── Cards ── */
+    .card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:12px;padding:1.5rem;
+    }
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-bottom:2rem;}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:2rem;}
+    .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;}
+
+    /* ── Stat pills ── */
+    .stat-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:12px;padding:1.25rem 1.5rem;
+      display:flex;flex-direction:column;gap:0.3rem;
+    }
+    .stat-label{font-size:0.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+    .stat-val{font-family:'Oswald',sans-serif;font-size:2rem;font-weight:700;color:#fff;}
+    .stat-sub{font-size:0.75rem;color:var(--muted);}
+    .stat-card.pink .stat-val{color:var(--pink);}
+    .stat-card.green .stat-val{color:var(--green);}
+    .stat-card.yellow .stat-val{color:var(--yellow);}
+    .stat-card.purple .stat-val{color:var(--purple);filter:brightness(1.5);}
+
+    /* ── Zárás / gyors kontroll ── */
+    .control-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:2rem;}
+    .control-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:12px;padding:1.5rem;
+    }
+    .control-card h3{
+      font-family:'Oswald',sans-serif;font-size:1rem;font-weight:700;
+      text-transform:uppercase;color:#fff;margin-bottom:0.4rem;
+    }
+    .control-card p{font-size:0.8rem;color:var(--muted);margin-bottom:1.25rem;line-height:1.5;}
+
+    .big-btn{
+      width:100%;padding:0.85rem;border:none;border-radius:10px;
+      font-size:0.9rem;font-weight:700;font-family:'Inter',sans-serif;
+      cursor:pointer;transition:all 0.2s;display:flex;align-items:center;
+      justify-content:center;gap:0.5rem;
+    }
+    .big-btn.green{background:var(--green);color:#fff;}
+    .big-btn.green:hover{background:#059669;}
+    .big-btn.red{background:var(--red);color:#fff;}
+    .big-btn.red:hover{background:#dc2626;}
+    .big-btn.yellow{background:var(--yellow);color:#111;}
+    .big-btn.yellow:hover{background:#d97706;}
+    .big-btn.purple{background:var(--purple);color:#fff;}
+    .big-btn.purple:hover{filter:brightness(1.1);}
+    .big-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+    .msg-input{
+      width:100%;background:var(--dark2);border:1px solid var(--border);
+      color:var(--text);padding:0.65rem 0.9rem;border-radius:8px;
+      font-size:0.85rem;font-family:'Inter',sans-serif;outline:none;
+      margin-bottom:0.75rem;transition:border-color 0.2s;
+    }
+    .msg-input:focus{border-color:var(--pink);}
+    .msg-input::placeholder{color:var(--muted);}
+
+    /* ── Toggle switch ── */
+    .toggle-row{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0.75rem 0;border-bottom:1px solid var(--border);
+      gap:1rem;
+    }
+    .toggle-row:last-child{border-bottom:none;}
+    .toggle-info{flex:1;min-width:0;}
+    .toggle-name{font-size:0.88rem;font-weight:600;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .toggle-price{font-size:0.75rem;color:var(--muted);}
+    .toggle-cat{font-size:0.65rem;background:var(--card2);color:var(--muted);padding:0.1rem 0.4rem;border-radius:4px;margin-left:0.4rem;text-transform:uppercase;}
+
+    .switch{
+      position:relative;width:44px;height:24px;flex-shrink:0;
+    }
+    .switch input{opacity:0;width:0;height:0;}
+    .slider{
+      position:absolute;cursor:pointer;inset:0;
+      background:var(--border2);border-radius:24px;
+      transition:all 0.2s;
+    }
+    .slider::before{
+      content:'';position:absolute;
+      width:18px;height:18px;left:3px;bottom:3px;
+      background:#fff;border-radius:50%;
+      transition:all 0.2s;
+    }
+    .switch input:checked + .slider{background:var(--green);}
+    .switch input:checked + .slider::before{transform:translateX(20px);}
+    .toggle-row.out-of-stock .toggle-name{color:var(--muted);text-decoration:line-through;}
+
+    /* ── Bar chart ── */
+    .chart-bar-wrap{margin-top:0.75rem;}
+    .bar-row{display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;}
+    .bar-label{font-size:0.75rem;color:var(--muted);white-space:nowrap;min-width:120px;overflow:hidden;text-overflow:ellipsis;}
+    .bar-track{flex:1;background:var(--dark2);border-radius:4px;height:20px;overflow:hidden;}
+    .bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--pink));transition:width 0.6s ease;}
+    .bar-val{font-family:'Oswald',sans-serif;font-size:0.85rem;font-weight:700;color:var(--pink);min-width:32px;text-align:right;}
+
+    /* ── Hour chart ── */
+    .hour-chart{display:flex;align-items:flex-end;gap:3px;height:80px;margin-top:0.75rem;}
+    .hour-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;}
+    .hour-bar{width:100%;border-radius:3px 3px 0 0;background:var(--purple);min-height:2px;transition:height 0.5s;}
+    .hour-lbl{font-size:0.55rem;color:var(--muted);}
+
+    /* ── Date filter ── */
+    .date-filter{display:flex;gap:0.5rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+    .df-btn{
+      background:var(--card);border:1px solid var(--border);color:var(--muted);
+      border-radius:20px;padding:0.35rem 0.85rem;font-size:0.78rem;font-weight:600;
+      cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.2s;
+    }
+    .df-btn.active{background:rgba(255,31,155,0.12);border-color:var(--pink);color:var(--pink);}
+
+    /* ── Inventory categories ── */
+    .inv-cat-title{
+      font-family:'Oswald',sans-serif;font-size:0.85rem;font-weight:700;
+      text-transform:uppercase;color:var(--pink);letter-spacing:1px;
+      padding:0.5rem 0 0.25rem;border-top:1px solid var(--border);margin-top:0.5rem;
+    }
+    .inv-cat-title:first-child{border-top:none;margin-top:0;}
+
+    /* ── Responsive ── */
+    @media(max-width:768px){
+      .grid-2,.control-grid{grid-template-columns:1fr;}
+      .grid-3,.grid-4{grid-template-columns:1fr 1fr;}
+    }
+    @media(max-width:480px){
+      .grid-3,.grid-4{grid-template-columns:1fr;}
+      .admin-body{padding:1rem;}
+    }
+  </style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <span class="hdr-logo">SMASH<span>POINT</span></span>
+    <span class="hdr-sub">Admin</span>
+  </div>
+  <div class="hdr-right">
+    <a href="kds.html" class="back-btn"><i class="fa-solid fa-display"></i> KDS</a>
+    <a href="index.html" class="back-btn"><i class="fa-solid fa-globe"></i> Weboldal</a>
+  </div>
+</div>
+
+<div class="admin-body">
+
+  <!-- ── GYORS VEZÉRLŐK ────────────────────────────── -->
+  <h2 class="section-title" style="margin-bottom:1rem;"><i class="fa-solid fa-bolt"></i> Gyors vezérlők</h2>
+  <div class="control-grid" style="margin-bottom:2.5rem;">
+
+    <div class="control-card">
+      <h3><i class="fa-solid fa-store" style="color:var(--green);margin-right:0.4rem;"></i>Rendelések állapota</h3>
+      <p>Kapcsold be vagy ki a rendelés fogadást. Kikapcsolt állapotban a vendégek nem tudnak rendelni.</p>
+      <button class="big-btn green" id="orders-toggle-btn" onclick="toggleOrders()">
+        <i class="fa-solid fa-circle-check"></i> <span id="orders-toggle-lbl">Betöltés...</span>
+      </button>
+    </div>
+
+    <div class="control-card">
+      <h3><i class="fa-solid fa-clock" style="color:var(--yellow);margin-right:0.4rem;"></i>Átmeneti zárás</h3>
+      <p>Ha ma hamarabb zártok, állítsd be az üzenetet – ez megjelenik a rendelési oldalon.</p>
+      <input class="msg-input" id="close-msg" placeholder="pl. Ma 17:00-kor zárunk, holnap nyitunk!" />
+      <div style="display:flex;gap:0.5rem;">
+        <button class="big-btn red" onclick="setTempClose()" style="flex:1;">
+          <i class="fa-solid fa-door-closed"></i> Zárás beállítása
+        </button>
+        <button class="big-btn green" onclick="clearTempClose()" style="flex:1;">
+          <i class="fa-solid fa-door-open"></i> Törlés
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── STATISZTIKÁK ──────────────────────────────── -->
+  <h2 class="section-title"><i class="fa-solid fa-chart-bar"></i> Statisztikák</h2>
+
+  <div class="date-filter">
+    <button class="df-btn active" data-range="today" onclick="setRange('today',this)">Ma</button>
+    <button class="df-btn" data-range="week" onclick="setRange('week',this)">Ezen a héten</button>
+    <button class="df-btn" data-range="month" onclick="setRange('month',this)">Ezen a hónapban</button>
+    <button class="df-btn" data-range="all" onclick="setRange('all',this)">Összes</button>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:1.5rem;">
+    <div class="stat-card pink">
+      <div class="stat-label">Rendelések</div>
+      <div class="stat-val" id="s-orders">–</div>
+      <div class="stat-sub" id="s-orders-sub">a kiválasztott időszakban</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Bevétel</div>
+      <div class="stat-val" id="s-revenue">–</div>
+      <div class="stat-sub">becsült forgalom</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-label">Átl. rendelés</div>
+      <div class="stat-val" id="s-avg">–</div>
+      <div class="stat-sub">átlagos kosárérték</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">Legtöbb ebben</div>
+      <div class="stat-val" id="s-peak">–</div>
+      <div class="stat-sub" id="s-peak-sub">csúcsidő</div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:2.5rem;">
+
+    <div class="card">
+      <div class="section-title" style="font-size:0.9rem;margin-bottom:1rem;">
+        <i class="fa-solid fa-trophy"></i> Top termékek
+      </div>
+      <div class="chart-bar-wrap" id="top-products">
+        <div style="color:var(--muted);font-size:0.82rem;">Betöltés...</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="font-size:0.9rem;margin-bottom:0.5rem;">
+        <i class="fa-solid fa-clock"></i> Csúcsforgalom (óra szerint)
+      </div>
+      <div class="hour-chart" id="hour-chart"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:4px;">
+        <span style="font-size:0.6rem;color:var(--muted);">0h</span>
+        <span style="font-size:0.6rem;color:var(--muted);">6h</span>
+        <span style="font-size:0.6rem;color:var(--muted);">12h</span>
+        <span style="font-size:0.6rem;color:var(--muted);">18h</span>
+        <span style="font-size:0.6rem;color:var(--muted);">23h</span>
+      </div>
+      <div style="margin-top:1rem;">
+        <div class="section-title" style="font-size:0.9rem;margin-bottom:0.5rem;">
+          <i class="fa-solid fa-motorcycle"></i> Elvitel vs. Házhozszállítás
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center;">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;">Elvitel</div>
+            <div class="bar-track"><div class="bar-fill" id="takeaway-bar" style="width:0%;background:linear-gradient(90deg,var(--purple),var(--pink));"></div></div>
+          </div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:var(--pink);" id="takeaway-pct">–</div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center;margin-top:0.5rem;">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;">Házhozszállítás</div>
+            <div class="bar-track"><div class="bar-fill" id="delivery-bar" style="width:0%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
+          </div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:#93c5fd;" id="delivery-pct">–</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── KÉSZLETKEZELÉS ────────────────────────────── -->
+  <h2 class="section-title"><i class="fa-solid fa-boxes-stacked"></i> Készletkezelés</h2>
+  <p style="color:var(--muted);font-size:0.82rem;margin-bottom:1.25rem;">Ha egy termék elfogyott, kapcsold ki – nem fog megjelenni a rendelési oldalon.</p>
+
+  <div class="card" id="inventory-list">
+    <div style="color:var(--muted);font-size:0.82rem;">Betöltés...</div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+  import { getFirestore, collection, query, where, orderBy, onSnapshot,
+           doc, getDoc, setDoc, Timestamp, getDocs }
+    from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey:            "AIzaSyA3KDdwfXpNOO4hxdsVwMzu8MyrmBB1ybA",
+    authDomain:        "smashpoint-mosonmagyarovar.firebaseapp.com",
+    projectId:         "smashpoint-mosonmagyarovar",
+    storageBucket:     "smashpoint-mosonmagyarovar.firebasestorage.app",
+    messagingSenderId: "1011499785566",
+    appId:             "1:1011499785566:web:56c393a2e5314c832203cf"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getFirestore(app);
+
+  const fmt = n => Math.round(n).toLocaleString('hu-HU') + ' Ft';
+
+  // ── Menü adatok (készlethez) ────────────────────
+  const MENU_ITEMS = [
+    // Különleges
+    { id:'sef_kedvence',   name:'Séf Kedvence',            cat:'Különleges', price:5590 },
+    { id:'gold_smash',     name:'Gold Smash',              cat:'Különleges', price:6350 },
+    { id:'mystery_burger', name:'Smash Mystery Burger',    cat:'Különleges', price:6490 },
+    // Burgerek
+    { id:'smash_sajt',     name:'Smash Sajtburger',        cat:'Burgerek',   price:3190 },
+    { id:'dupla_sajt',     name:'Dupla Smash Sajtburger',  cat:'Burgerek',   price:3890 },
+    { id:'point_1hus',     name:'Point Burger 1 Húsos',    cat:'Burgerek',   price:3590 },
+    { id:'point_burger',   name:'Point Burger',            cat:'Burgerek',   price:3990 },
+    { id:'tripla_burger',  name:'Tripla Point Burger',     cat:'Burgerek',   price:4890 },
+    { id:'hawai_burger',   name:'Hawai Point Burger',      cat:'Burgerek',   price:4290 },
+    { id:'angry_burger',   name:'Angry Point Burger',      cat:'Burgerek',   price:4450 },
+    { id:'chili_cheese',   name:'Chili Cheese',            cat:'Burgerek',   price:4790 },
+    { id:'fresh_burger',   name:'Point Burger Fresh',      cat:'Burgerek',   price:4790 },
+    // Köretek
+    { id:'krumpli',        name:'Point Krumpli',           cat:'Köretek',    price:1290 },
+    { id:'sajtos_fries',   name:'Nagyon Sajtos Fries',     cat:'Köretek',    price:2590 },
+    { id:'hagyma',         name:'Hagymakarika',            cat:'Köretek',    price:1590 },
+    { id:'point_falat',    name:'Point Falatok',           cat:'Köretek',    price:1950 },
+    { id:'angry_falat',    name:'Angry Falatok',           cat:'Köretek',    price:2390 },
+    { id:'inferno_falat',  name:'Inferno Falatok',         cat:'Köretek',    price:2390 },
+    // Desszert
+    { id:'szufle',         name:'Point Szuflé',            cat:'Desszert',   price:1950 },
+  ];
+
+  // ── Dátum tartomány ─────────────────────────────
+  let currentRange = 'today';
+
+  function rangeStart(range) {
+    const d = new Date();
+    d.setHours(0,0,0,0);
+    if(range === 'today')  return Timestamp.fromDate(d);
+    if(range === 'week') {
+      const day = d.getDay() || 7;
+      d.setDate(d.getDate() - day + 1);
+      return Timestamp.fromDate(d);
+    }
+    if(range === 'month') {
+      d.setDate(1);
+      return Timestamp.fromDate(d);
+    }
+    return Timestamp.fromDate(new Date(2020,0,1)); // all
+  }
+
+  window.setRange = (range, btn) => {
+    currentRange = range;
+    document.querySelectorAll('.df-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadStats();
+  };
+
+  async function loadStats() {
+    const start = rangeStart(currentRange);
+    // Egyszerű query – csak dátum szűrő, törölt rendeléseket kliens oldalon szűrjük
+    const q = query(
+      collection(db,'orders'),
+      where('createdAt','>=',start),
+      orderBy('createdAt','desc')
+    );
+    const snap = await getDocs(q);
+    const orders = snap.docs
+      .map(d=>({...d.data()}))
+      .filter(o => o.status && o.status !== 'deleted');
+
+    // Alap statok
+    const total   = orders.length;
+    const revenue = orders.reduce((s,o)=>s+(o.total||0),0);
+    const avg     = total ? revenue/total : 0;
+
+    document.getElementById('s-orders').textContent  = total;
+    document.getElementById('s-revenue').textContent = total ? fmt(revenue) : '–';
+    document.getElementById('s-avg').textContent     = total ? fmt(avg) : '–';
+
+    // Csúcsóra
+    const hourMap = Array(24).fill(0);
+    orders.forEach(o => {
+      if(o.createdAt?.toDate) hourMap[o.createdAt.toDate().getHours()]++;
+    });
+    const peakHour = hourMap.indexOf(Math.max(...hourMap));
+    document.getElementById('s-peak').textContent    = total ? `${peakHour}:00` : '–';
+    document.getElementById('s-peak-sub').textContent= total ? `${hourMap[peakHour]} rendelés ebben az órában` : '';
+
+    // Óra chart
+    const maxH = Math.max(...hourMap, 1);
+    const hc = document.getElementById('hour-chart');
+    hc.innerHTML = hourMap.map((v,i)=>`
+      <div class="hour-col">
+        <div class="hour-bar" style="height:${Math.round((v/maxH)*72)}px;opacity:${v?1:0.2};${i===peakHour?'background:var(--pink);':''}" title="${i}:00 – ${v} rendelés"></div>
+      </div>`).join('');
+
+    // Top termékek
+    const itemMap = {};
+    orders.forEach(o=>(o.items||[]).forEach(i=>{
+      itemMap[i.name] = (itemMap[i.name]||0) + (i.qty||1);
+    }));
+    const sorted = Object.entries(itemMap).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const maxQ   = sorted[0]?.[1] || 1;
+    const tp = document.getElementById('top-products');
+    tp.innerHTML = sorted.length ? sorted.map(([name,qty])=>`
+      <div class="bar-row">
+        <div class="bar-label" title="${name}">${name}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round((qty/maxQ)*100)}%"></div></div>
+        <div class="bar-val">${qty}x</div>
+      </div>`).join('') : '<div style="color:var(--muted);font-size:0.82rem;">Nincs adat a kiválasztott időszakra.</div>';
+
+    // Elvitel vs. szállítás
+    const takeaway = orders.filter(o=>o.type==='takeaway').length;
+    const delivery = orders.filter(o=>o.type==='delivery').length;
+    const tPct = total ? Math.round(takeaway/total*100) : 0;
+    const dPct = total ? 100-tPct : 0;
+    document.getElementById('takeaway-bar').style.width = tPct + '%';
+    document.getElementById('delivery-bar').style.width = dPct + '%';
+    document.getElementById('takeaway-pct').textContent = total ? tPct+'%' : '–';
+    document.getElementById('delivery-pct').textContent = total ? dPct+'%' : '–';
+  }
+
+  // ── Rendelések on/off ────────────────────────────
+  const cfgRef = doc(db,'settings','config');
+  let ordersOpen = true;
+
+  async function loadConfig() {
+    const snap = await getDoc(cfgRef);
+    if(snap.exists()) {
+      ordersOpen = !(snap.data().ordersClosed ?? false);
+      const msg = snap.data().tempCloseMsg || '';
+      document.getElementById('close-msg').value = msg;
+    }
+    renderOrdersBtn();
+  }
+
+  function renderOrdersBtn() {
+    const btn = document.getElementById('orders-toggle-btn');
+    const lbl = document.getElementById('orders-toggle-lbl');
+    if(ordersOpen) {
+      btn.className = 'big-btn green';
+      btn.innerHTML = '<i class="fa-solid fa-circle-check"></i> <span>Rendelés NYITVA – kattints a záráshoz</span>';
+    } else {
+      btn.className = 'big-btn red';
+      btn.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> <span>Rendelés ZÁRVA – kattints a nyitáshoz</span>';
+    }
+  }
+
+  window.toggleOrders = async () => {
+    ordersOpen = !ordersOpen;
+    await setDoc(cfgRef, { ordersClosed: !ordersOpen, isOnline: ordersOpen }, { merge:true });
+    renderOrdersBtn();
+  };
+
+  window.setTempClose = async () => {
+    const msg = document.getElementById('close-msg').value.trim();
+    if(!msg) { alert('Adj meg egy üzenetet!'); return; }
+    await setDoc(cfgRef, { tempCloseMsg: msg, ordersClosed: true, isOnline: false }, { merge:true });
+    ordersOpen = false;
+    renderOrdersBtn();
+    alert('Átmeneti zárás beállítva!');
+  };
+
+  window.clearTempClose = async () => {
+    await setDoc(cfgRef, { tempCloseMsg: '', ordersClosed: false, isOnline: true }, { merge:true });
+    document.getElementById('close-msg').value = '';
+    ordersOpen = true;
+    renderOrdersBtn();
+    alert('Zárás törölve, rendelés ismét nyitva!');
+  };
+
+  // ── Készletkezelés ───────────────────────────────
+  const invRef = doc(db,'settings','inventory');
+  let inventory = {};
+
+  async function loadInventory() {
+    const snap = await getDoc(invRef);
+    inventory = snap.exists() ? (snap.data() || {}) : {};
+    renderInventory();
+  }
+
+  function renderInventory() {
+    const el = document.getElementById('inventory-list');
+    const cats = [...new Set(MENU_ITEMS.map(i=>i.cat))];
+    el.innerHTML = cats.map(cat => {
+      const items = MENU_ITEMS.filter(i=>i.cat===cat);
+      return `
+        <div class="inv-cat-title">${cat}</div>
+        ${items.map(item => {
+          const avail = inventory[item.id] !== false;
+          return `
+            <div class="toggle-row ${avail?'':'out-of-stock'}" id="inv-row-${item.id}">
+              <div class="toggle-info">
+                <span class="toggle-name">${item.name}</span>
+                <span class="toggle-cat">${item.cat}</span>
+                <div class="toggle-price">${item.price.toLocaleString('hu-HU')} Ft</div>
+              </div>
+              <label class="switch">
+                <input type="checkbox" ${avail?'checked':''} onchange="toggleItem('${item.id}',this.checked)" />
+                <span class="slider"></span>
+              </label>
+            </div>`;
+        }).join('')}`;
+    }).join('');
+  }
+
+  window.toggleItem = async (id, available) => {
+    inventory[id] = available;
+    await setDoc(invRef, { [id]: available }, { merge:true });
+    const row = document.getElementById(`inv-row-${id}`);
+    if(row) row.classList.toggle('out-of-stock', !available);
+  };
+
+  // ── Init ─────────────────────────────────────────
+  loadConfig();
+  loadInventory();
+  loadStats();
+</script>
+</body>
+</html>
