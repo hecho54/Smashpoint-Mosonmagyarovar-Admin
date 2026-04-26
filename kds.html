@@ -812,13 +812,21 @@
   }, 1000);
 
   // ── Hang ─────────────────────────────────────────────
-  let soundOn = true;
+  let soundOn = localStorage.getItem('kds-sound') !== 'off';
   let prevNewCount = 0;
+
+  function renderSoundBtn() {
+    document.getElementById('sound-icon').innerHTML = soundOn
+      ? '<i class="fa-solid fa-volume-high"></i>'
+      : '<i class="fa-solid fa-volume-xmark"></i>';
+    document.getElementById('sound-btn').className = `hdr-btn ${soundOn ? 'sound-on' : ''}`;
+  }
+  renderSoundBtn();
 
   window.toggleSound = () => {
     soundOn = !soundOn;
-    document.getElementById('sound-icon').innerHTML = soundOn ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
-    document.getElementById('sound-btn').className = `hdr-btn ${soundOn ? 'sound-on' : ''}`;
+    localStorage.setItem('kds-sound', soundOn ? 'on' : 'off');
+    renderSoundBtn();
   };
 
   function playBeep() {
