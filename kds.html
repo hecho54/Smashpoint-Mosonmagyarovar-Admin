@@ -520,19 +520,75 @@
     .btn-revert:hover{border-color:var(--muted);color:var(--text);}
     .o-action-spacer{flex:1;}
 
+    /* ══ TABLET ══════════════════════════════════════════ */
     @media(max-width:1000px){
-      .kds-body{grid-template-columns:1fr;height:auto;overflow:visible;background:none;gap:0;}
-      .kds-col{display:none;min-height:calc(100vh - 150px);}
+      .kds-body{grid-template-columns:1fr;}
+      .kds-col{display:none;}
       .kds-col.active{display:flex;}
       .mob-tabs{display:flex;}
-      html,body{overflow:auto;}
       .new-orders-btn{display:none;}
       .hdr-right .time-btn{display:none;}
     }
+
+    /* ══ MOBIL ═══════════════════════════════════════════ */
     @media(max-width:640px){
-      .hdr1{height:auto;flex-wrap:wrap;padding:0.6rem;gap:0.5rem;}
+      /* Header tömörítés */
+      .hdr1{
+        height:auto;
+        padding:0.5rem 0.75rem;
+        gap:0.4rem;
+        flex-wrap:wrap;
+      }
+      .logo-sub{display:none;}
+      .logo-text{font-size:0.95rem;}
+      .logo-icon{width:28px;height:28px;font-size:0.9rem;}
+      .new-orders-btn{display:none;}
       .clock-display{display:none;}
       .close-all-btn{display:none;}
+      .hdr-right .time-btn{display:none;}
+      #test-btn{display:none;}
+
+      .hdr2{
+        padding:0.3rem 0.75rem;
+        gap:0.5rem;
+        flex-wrap:wrap;
+      }
+      .stat-item{font-size:0.75rem;}
+      .stat-item strong{font-size:0.9rem;}
+      .hdr2-right{flex-wrap:wrap;gap:0.3rem;}
+      .type-pill{font-size:0.7rem;padding:0.25rem 0.6rem;}
+
+      /* Mobil tabok */
+      .mob-tab{font-size:0.7rem;padding:0.5rem 0.25rem;}
+
+      /* Kártya sorok mobilon */
+      .o-main{padding:0.5rem 0.5rem;gap:0.35rem;flex-wrap:wrap;}
+      .o-num{font-size:0.9rem;min-width:32px;}
+      .o-type{font-size:0.58rem;padding:0.1rem 0.35rem;}
+      .pay-badge{font-size:0.55rem !important;padding:0.1rem 0.35rem !important;}
+      .o-time{font-size:0.65rem;}
+      .o-act{font-size:0.7rem;padding:0.35rem 0.65rem;}
+
+      /* Kibővített kártya mobilon */
+      .o-details{padding:0.5rem 0.75rem;}
+      .o-item-name-b{font-size:0.78rem;}
+      .o-item-desc-b{font-size:0.65rem;}
+      .btn-delete,.btn-revert{font-size:0.7rem;padding:0.4rem 0.6rem;}
+
+      /* Scrollbar mobilon */
+      .col-cards::-webkit-scrollbar{width:4px;}
+
+      /* Picker mobilon */
+      .picker-box{min-width:260px;padding:1.25rem;}
+      .picker-grid{grid-template-columns:repeat(3,1fr);gap:0.4rem;}
+    }
+
+    /* ══ KIS MOBIL (iPhone SE) ══════════════════════════ */
+    @media(max-width:390px){
+      .hdr1{padding:0.4rem 0.5rem;}
+      .mob-tab{font-size:0.65rem;}
+      .o-num{font-size:0.85rem;}
+      .o-act{font-size:0.65rem;padding:0.3rem 0.55rem;}
     }
   </style>
 </head>
@@ -733,14 +789,15 @@
   function fixLayout() {
     const hdr1H = document.querySelector('.hdr1')?.offsetHeight || 56;
     const hdr2H = document.querySelector('.hdr2')?.offsetHeight || 41;
-    const top   = hdr1H + hdr2H;
+    const tabsH = document.querySelector('.mob-tabs')?.offsetHeight || 0;
+    const top   = hdr1H + hdr2H + tabsH;
     const avail = window.innerHeight - top;
     const kds   = document.querySelector('.kds-body');
     if(kds) { kds.style.top = top + 'px'; kds.style.height = avail + 'px'; }
     document.querySelectorAll('.col-cards').forEach(el => {
       const colHdr = el.closest('.kds-col')?.querySelector('.col-hdr');
       const hdrH   = colHdr?.offsetHeight || 43;
-      el.style.height  = (avail - hdrH) + 'px';
+      el.style.height    = (avail - hdrH) + 'px';
       el.style.maxHeight = (avail - hdrH) + 'px';
     });
   }
