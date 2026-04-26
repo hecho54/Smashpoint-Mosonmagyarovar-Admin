@@ -244,7 +244,7 @@
     }
     .col-cards::-webkit-scrollbar-thumb:hover{background:var(--pink-dark);}
 
-    .col-empty{text-align:center;color:var(--muted);font-size:0.8rem;padding:2rem;opacity:0.4;}
+    .col-empty{text-align:center;color:var(--muted);font-size:0.8rem;padding:2rem;opacity:0.4;flex-shrink:0;}
 
     .scroll-arrow {
       position:fixed;
@@ -298,6 +298,7 @@
       border-radius:8px;overflow:hidden;
       animation:fadeIn 0.2s ease;
       border-left:3px solid transparent;
+      flex-shrink:0;
     }
     @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 
