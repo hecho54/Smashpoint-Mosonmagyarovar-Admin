@@ -5,12 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Konyhai Kijelző – Smash Point</title>
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
   <style>
     :root {
       --pink:   #FF1F9B;
       --purple: #8B30C8;
-      --orange: #f97316;
-      --orange2:#ea580c;
+      --pink-dark: #cc0c7a;
+      --orange: var(--pink);
+      --orange2:var(--pink-dark);
       --yellow: #f59e0b;
       --green:  #10b981;
       --red:    #ef4444;
@@ -25,7 +27,16 @@
       --border2:#3D2D55;
     }
     *{margin:0;padding:0;box-sizing:border-box;}
-    html,body{height:100%;font-family:'Inter',sans-serif;background:var(--dark);color:var(--text);overflow:hidden;}
+    html{height:100%;}
+    body{
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      font-family:'Inter',sans-serif;
+      background:var(--dark);
+      color:var(--text);
+      overflow:hidden;
+    }
 
     /* ══ HEADER ROW 1 ══════════════════════════════════════ */
     .hdr1 {
@@ -36,7 +47,8 @@
       display:flex;
       align-items:center;
       gap:0.75rem;
-      position:sticky;top:0;z-index:60;
+      flex-shrink:0;
+      z-index:60;
     }
 
     .logo {
@@ -59,19 +71,19 @@
       flex:1;display:flex;justify-content:center;
     }
     .new-btn {
-      background:var(--orange);color:#fff;
+      background:var(--pink);color:#fff;
       border:none;border-radius:40px;
       padding:0.5rem 1.75rem;
       font-size:0.95rem;font-weight:700;
       cursor:pointer;font-family:'Inter',sans-serif;
       display:flex;align-items:center;gap:0.5rem;
       animation:pulse-btn 1.5s ease-in-out infinite;
-      box-shadow:0 0 24px rgba(249,115,22,0.5);
+      box-shadow:0 0 24px rgba(255,31,155,0.5);
       transition:all 0.2s;
     }
-    .new-btn:hover{background:var(--orange2);}
+    .new-btn:hover{background:var(--pink-dark);}
     .new-btn.hidden{display:none;}
-    @keyframes pulse-btn{0%,100%{box-shadow:0 0 16px rgba(249,115,22,0.4);}50%{box-shadow:0 0 32px rgba(249,115,22,0.7);}}
+    @keyframes pulse-btn{0%,100%{box-shadow:0 0 16px rgba(255,31,155,0.4);}50%{box-shadow:0 0 32px rgba(255,31,155,0.7);}}
     .new-dot{width:10px;height:10px;border-radius:50%;background:#fff;animation:blink 1s ease-in-out infinite;}
     @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
@@ -126,6 +138,18 @@
       transition:all 0.2s;white-space:nowrap;
     }
     .close-all-btn:hover{border-color:var(--green);color:var(--green);}
+    .close-all-btn.orders-open {
+      background:rgba(16,185,129,0.12);
+      border-color:var(--green);
+      color:var(--green);
+    }
+    .close-all-btn.orders-open:hover{background:rgba(16,185,129,0.2);}
+    .close-all-btn.orders-closed {
+      background:rgba(239,68,68,0.12);
+      border-color:var(--red);
+      color:var(--red);
+    }
+    .close-all-btn.orders-closed:hover{background:rgba(239,68,68,0.2);}
 
     /* ══ HEADER ROW 2 ══════════════════════════════════════ */
     .hdr2 {
@@ -133,6 +157,7 @@
       border-bottom:2px solid var(--border);
       padding:0.4rem 1rem;
       display:flex;align-items:center;gap:1rem;
+      flex-shrink:0;
     }
     .stat-item{font-size:0.85rem;color:var(--muted);white-space:nowrap;}
     .stat-item strong{font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;margin-right:0.2rem;}
@@ -152,13 +177,22 @@
 
     /* ══ COLUMNS ═══════════════════════════════════════════ */
     .kds-body {
+      position:fixed;
+      left:0; right:0; bottom:0;
       display:grid;
       grid-template-columns:repeat(4,1fr);
-      gap:1px;background:var(--border);
-      height:calc(100vh - 97px);
+      gap:1px;
+      background:var(--border);
+      overflow:hidden;
     }
 
-    .kds-col{background:var(--dark2);display:flex;flex-direction:column;overflow:hidden;}
+    .kds-col{
+      background:var(--dark2);
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      height:100%;
+    }
 
     .col-hdr{
       padding:0.6rem 0.85rem;
@@ -189,11 +223,64 @@
     .col-ready .col-title{color:var(--green);}
     .col-handed.col-title{color:var(--gray);}
 
-    .col-cards{flex:1;overflow-y:auto;padding:0.5rem;display:flex;flex-direction:column;gap:0.4rem;position:relative;}
-    .col-cards::-webkit-scrollbar{width:3px;}
-    .col-cards::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+    .col-cards{
+      flex:1;
+      min-height:0;
+      overflow-y:auto;
+      overflow-x:hidden;
+      padding:0.5rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.4rem;
+      scrollbar-width:thin;
+      scrollbar-color:var(--pink) transparent;
+    }
+    .col-cards::-webkit-scrollbar{width:8px;}
+    .col-cards::-webkit-scrollbar-track{background:transparent;}
+    .col-cards::-webkit-scrollbar-thumb{
+      background:var(--pink);
+      border-radius:8px;
+      border:2px solid var(--dark2);
+    }
+    .col-cards::-webkit-scrollbar-thumb:hover{background:var(--pink-dark);}
 
     .col-empty{text-align:center;color:var(--muted);font-size:0.8rem;padding:2rem;opacity:0.4;}
+
+    .scroll-arrow {
+      position:fixed;
+      right:0;
+      width:36px;
+      height:36px;
+      background:var(--pink);
+      color:#fff;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      font-size:1rem;
+      z-index:110;
+      box-shadow:0 2px 12px rgba(255,31,155,0.5);
+      transition:background 0.15s;
+    }
+    .scroll-arrow:hover{background:var(--pink-dark);}
+
+    .scroll-pill {
+      position:fixed;
+      transform:translateX(-50%);
+      background:var(--pink);
+      color:#fff;
+      font-size:0.7rem;
+      font-weight:700;
+      padding:0.3rem 0.85rem;
+      border-radius:20px;
+      white-space:nowrap;
+      box-shadow:0 2px 16px rgba(255,31,155,0.45);
+      pointer-events:none;
+      display:none;
+      z-index:100;
+    }
 
     /* Scroll indicator */
     .scroll-hint{
@@ -320,7 +407,7 @@
     .pay-szep {background:rgba(245,158,11,0.15);color:var(--yellow);border-color:rgba(245,158,11,0.3);}
 
     /* ══ MOBILE ════════════════════════════════════════════ */
-    .mob-tabs{display:none;background:var(--dark2);border-bottom:1px solid var(--border);}
+    .mob-tabs{display:none;background:var(--dark2);border-bottom:1px solid var(--border);flex-shrink:0;}
     .mob-tab{flex:1;padding:0.65rem;border:none;background:transparent;color:var(--muted);font-size:0.75rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s;font-family:'Inter',sans-serif;}
     .mob-tab.active{color:var(--orange);border-bottom-color:var(--orange);}
 
@@ -410,8 +497,9 @@
     .o-delivery-icon{font-size:0.85rem;width:1.2rem;text-align:center;}
 
     .o-action-row{
-      display:flex;gap:0.4rem;padding-top:0.25rem;
+      display:flex;flex-wrap:wrap;gap:0.4rem;padding-top:0.5rem;
       border-top:1px solid var(--border);margin-top:0.25rem;
+      align-items:center;
     }
     .btn-delete{
       background:transparent;border:1px solid var(--red);
@@ -452,7 +540,7 @@
 <!-- ══ HEADER ROW 1 ══════════════════════════════════════ -->
 <div class="hdr1">
   <div class="logo">
-    <div class="logo-icon">🍔</div>
+    <div class="logo-icon"><i class="fa-solid fa-burger"></i></div>
     <div>
       <div class="logo-text">SMASH<span>POINT</span></div>
       <div class="logo-sub">Konyhai Kijelző</div>
@@ -461,7 +549,7 @@
 
   <div class="new-orders-btn">
     <button class="new-btn hidden" id="new-orders-btn" onclick="scrollToNew()">
-      <span class="new-dot"></span>
+      <i class="fa-solid fa-circle-dot"></i>
       <span id="new-orders-txt">0 ÚJ RENDELÉS!</span>
     </button>
   </div>
@@ -469,14 +557,19 @@
   <div class="hdr-right">
     <div class="clock-display" id="clock">00:00:00</div>
 
+    <button class="hdr-btn" id="test-btn" onclick="createTestOrder()" title="Teszt rendelés létrehozása">
+      Teszt
+    </button>
+
     <button class="hdr-btn online" id="online-btn" onclick="toggleOnline()">
       <span class="status-dot"></span>
       <span id="online-lbl">Online</span>
     </button>
 
     <button class="hdr-btn" id="sound-btn" onclick="toggleSound()" title="Hangjelzés">
-      <span id="sound-icon">🔊</span>
+      <span id="sound-icon"><i class="fa-solid fa-volume-high"></i></span>
     </button>
+
 
     <button class="time-btn" onclick="openPicker('pickup')">
       <span class="time-lbl">Bejövős idő</span>
@@ -488,8 +581,13 @@
       <span class="time-val" id="t-delivery">2 óra</span>
     </button>
 
-    <button class="close-all-btn" onclick="closeAllReady()" title="Összes kész rendelés átadása">
-      🔒 RENDELÉS ZÁRÁSA
+    <button class="hdr-btn" onclick="deleteAllOrders()" title="Összes mai rendelés törlése" style="border-color:#3d1515;color:#ef4444;">
+      <i class="fa-solid fa-trash"></i> Össztörlés
+    </button>
+
+    <button class="close-all-btn" id="orders-close-btn" onclick="toggleOrdersClosed()">
+      <span id="orders-close-icon"><i class="fa-solid fa-lock-open"></i></span>
+      <span id="orders-close-lbl">RENDELÉS ZÁRÁSA</span>
     </button>
   </div>
 </div>
@@ -503,17 +601,17 @@
 
   <div class="hdr2-right">
     <button class="type-pill active-all" id="pill-all"      onclick="setFilter('all',this)">Összes</button>
-    <button class="type-pill"            id="pill-takeaway" onclick="setFilter('takeaway',this)">🥡 Bejön érte</button>
-    <button class="type-pill"            id="pill-delivery" onclick="setFilter('delivery',this)">🛵 Házhozszállítás</button>
+    <button class="type-pill"            id="pill-takeaway" onclick="setFilter('takeaway',this)"><i class="fa-solid fa-bag-shopping"></i> Bejön érte</button>
+    <button class="type-pill"            id="pill-delivery" onclick="setFilter('delivery',this)"><i class="fa-solid fa-motorcycle"></i> Házhozszállítás</button>
   </div>
 </div>
 
 <!-- ══ MOBILE TABS ══════════════════════════════════════ -->
 <div class="mob-tabs">
-  <button class="mob-tab active" onclick="mobTab('new',this)">🔥 Új</button>
-  <button class="mob-tab" onclick="mobTab('prep',this)">⭐ Készül</button>
-  <button class="mob-tab" onclick="mobTab('ready',this)">✅ Kész</button>
-  <button class="mob-tab" onclick="mobTab('handed',this)">🤝 Átadva</button>
+  <button class="mob-tab active" onclick="mobTab('new',this)"><i class="fa-solid fa-fire"></i> Új</button>
+  <button class="mob-tab" onclick="mobTab('prep',this)"><i class="fa-solid fa-star"></i> Készül</button>
+  <button class="mob-tab" onclick="mobTab('ready',this)"><i class="fa-solid fa-circle-check"></i> Kész</button>
+  <button class="mob-tab" onclick="mobTab('handed',this)"><i class="fa-solid fa-handshake"></i> Átadva</button>
 </div>
 
 <!-- ══ COLUMNS ═══════════════════════════════════════════ -->
@@ -521,10 +619,9 @@
 
   <div class="kds-col col-new active" id="col-new">
     <div class="col-hdr">
-      <span class="col-icon">🔥</span>
+      <span class="col-icon"><i class="fa-solid fa-fire"></i></span>
       <span class="col-title">Új</span>
       <span class="col-cnt" id="cnt-new">0</span>
-      <button class="grid-toggle" onclick="toggleGrid('new')" title="Nézet váltás">⊞</button>
     </div>
     <div class="col-cards" id="cards-new">
       <div class="col-empty">Nincs aktív rendelés</div>
@@ -533,10 +630,9 @@
 
   <div class="kds-col col-prep" id="col-prep">
     <div class="col-hdr">
-      <span class="col-icon">⭐</span>
+      <span class="col-icon"><i class="fa-solid fa-kitchen-set"></i></span>
       <span class="col-title">Készül</span>
       <span class="col-cnt" id="cnt-prep">0</span>
-      <button class="grid-toggle" onclick="toggleGrid('prep')" title="Nézet váltás">⊞</button>
     </div>
     <div class="col-cards" id="cards-prep">
       <div class="col-empty">Nincs aktív rendelés</div>
@@ -545,10 +641,9 @@
 
   <div class="kds-col col-ready" id="col-ready">
     <div class="col-hdr">
-      <span class="col-icon">✅</span>
+      <span class="col-icon"><i class="fa-solid fa-circle-check"></i></span>
       <span class="col-title">Kész</span>
       <span class="col-cnt" id="cnt-ready">0</span>
-      <button class="grid-toggle" onclick="toggleGrid('ready')" title="Nézet váltás">⊞</button>
     </div>
     <div class="col-cards" id="cards-ready">
       <div class="col-empty">Nincs aktív rendelés</div>
@@ -557,10 +652,9 @@
 
   <div class="kds-col col-handed" id="col-handed">
     <div class="col-hdr">
-      <span class="col-icon">🤝</span>
+      <span class="col-icon"><i class="fa-solid fa-handshake"></i></span>
       <span class="col-title">Átadva</span>
       <span class="col-cnt" id="cnt-handed">0</span>
-      <button class="grid-toggle" onclick="toggleGrid('handed')" title="Nézet váltás">⊞</button>
     </div>
     <div class="col-cards" id="cards-handed">
       <div class="col-empty">Nincs lezárt rendelés</div>
@@ -568,6 +662,16 @@
   </div>
 
 </div>
+
+<!-- ══ SCROLL PILLS (fixed) ══════════════════════════════ -->
+<div class="scroll-pill" id="above-new"><i class="fa-solid fa-angles-up"></i> VAN MÉG FENT</div>
+<div class="scroll-pill" id="below-new"><i class="fa-solid fa-angles-down"></i> VAN MÉG LENT</div>
+<div class="scroll-pill" id="above-prep"><i class="fa-solid fa-angles-up"></i> VAN MÉG FENT</div>
+<div class="scroll-pill" id="below-prep"><i class="fa-solid fa-angles-down"></i> VAN MÉG LENT</div>
+<div class="scroll-pill" id="above-ready"><i class="fa-solid fa-angles-up"></i> VAN MÉG FENT</div>
+<div class="scroll-pill" id="below-ready"><i class="fa-solid fa-angles-down"></i> VAN MÉG LENT</div>
+<div class="scroll-pill" id="above-handed"><i class="fa-solid fa-angles-up"></i> VAN MÉG FENT</div>
+<div class="scroll-pill" id="below-handed"><i class="fa-solid fa-angles-down"></i> VAN MÉG LENT</div>
 
 <!-- ══ TIME PICKER POPUPS ═══════════════════════════════ -->
 <div class="picker-overlay" id="picker-pickup" onclick="closePicker('pickup')">
@@ -608,7 +712,7 @@
 <script type="module">
   import { initializeApp }   from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
   import { getFirestore, collection, query, orderBy, onSnapshot,
-           doc, updateDoc, setDoc, getDoc, where, Timestamp, writeBatch }
+           doc, updateDoc, setDoc, getDoc, where, Timestamp, addDoc, serverTimestamp, runTransaction }
     from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
   const firebaseConfig = {
@@ -624,6 +728,82 @@
   const app = initializeApp(firebaseConfig);
   const db  = getFirestore(app);
 
+  // ── Layout fix ────────────────────────────────────────
+  function fixLayout() {
+    const hdr1H = document.querySelector('.hdr1')?.offsetHeight || 56;
+    const hdr2H = document.querySelector('.hdr2')?.offsetHeight || 41;
+    const top   = hdr1H + hdr2H;
+    const avail = window.innerHeight - top;
+    const kds   = document.querySelector('.kds-body');
+    if(kds) { kds.style.top = top + 'px'; kds.style.height = avail + 'px'; }
+    document.querySelectorAll('.col-cards').forEach(el => {
+      const colHdr = el.closest('.kds-col')?.querySelector('.col-hdr');
+      const hdrH   = colHdr?.offsetHeight || 43;
+      el.style.height  = (avail - hdrH) + 'px';
+      el.style.maxHeight = (avail - hdrH) + 'px';
+    });
+  }
+  fixLayout();
+  window.addEventListener('resize', fixLayout);
+
+  // ── Görgetős gombok ───────────────────────────────────
+  const KEYS = ['new','prep','ready','handed'];
+
+  function createArrows() {
+    KEYS.forEach(key => {
+      ['up','down'].forEach(dir => {
+        const btn = document.createElement('button');
+        btn.className = 'scroll-arrow';
+        btn.id = `arrow-${dir}-${key}`;
+        btn.innerHTML = dir==='up'
+          ? '<i class="fa-solid fa-chevron-up"></i>'
+          : '<i class="fa-solid fa-chevron-down"></i>';
+        document.body.appendChild(btn);
+
+        let interval;
+        const doScroll = () => {
+          const el = document.getElementById(`cards-${key}`);
+          if(el) el.scrollBy({top: dir==='up' ? -120 : 120, behavior:'smooth'});
+        };
+        btn.addEventListener('mousedown', () => { doScroll(); interval = setInterval(doScroll, 300); });
+        btn.addEventListener('mouseup',   () => clearInterval(interval));
+        btn.addEventListener('mouseleave',() => clearInterval(interval));
+        btn.addEventListener('click', doScroll);
+      });
+    });
+  }
+  createArrows();
+
+  function positionArrows() {
+    KEYS.forEach(key => {
+      const cards = document.getElementById(`cards-${key}`);
+      if(!cards) return;
+      const r   = cards.getBoundingClientRect();
+      const cx  = r.right - 40;
+      const up  = document.getElementById(`arrow-up-${key}`);
+      const dn  = document.getElementById(`arrow-down-${key}`);
+      if(!up || !dn) return;
+
+      const hasAbove = cards.scrollTop > 20;
+      const hasBelow = cards.scrollHeight - cards.scrollTop - cards.clientHeight > 20;
+
+      up.style.display  = hasAbove ? 'flex' : 'none';
+      up.style.left     = (r.left + r.width/2 - 18) + 'px';
+      up.style.top      = (r.top + 6) + 'px';
+
+      dn.style.display  = hasBelow ? 'flex' : 'none';
+      dn.style.left     = (r.left + r.width/2 - 18) + 'px';
+      dn.style.top      = (r.bottom - 42) + 'px';
+    });
+    updatePills();
+  }
+
+  KEYS.forEach(key => {
+    const el = document.getElementById(`cards-${key}`);
+    if(el) el.addEventListener('scroll', positionArrows, {passive:true});
+  });
+  setInterval(positionArrows, 500);
+
   // ── Óra ──────────────────────────────────────────────
   setInterval(() => {
     document.getElementById('clock').textContent =
@@ -636,7 +816,7 @@
 
   window.toggleSound = () => {
     soundOn = !soundOn;
-    document.getElementById('sound-icon').textContent = soundOn ? '🔊' : '🔇';
+    document.getElementById('sound-icon').innerHTML = soundOn ? '<i class="fa-solid fa-volume-high"></i>' : '<i class="fa-solid fa-volume-xmark"></i>';
     document.getElementById('sound-btn').className = `hdr-btn ${soundOn ? 'sound-on' : ''}`;
   };
 
@@ -663,6 +843,8 @@
     if(snap.exists()) {
       const d = snap.data();
       isOnline = d.isOnline ?? false;
+      ordersClosed = d.ordersClosed ?? false;
+      renderClosedBtn();
       if(d.pickupTime) {
         document.getElementById('t-pickup').textContent = d.pickupTime;
         pickerSel.pickup = d.pickupTime;
@@ -777,14 +959,95 @@
     document.getElementById('cards-new').scrollTo({top:0,behavior:'smooth'});
   };
 
-  // ── Close all ready ───────────────────────────────────
-  window.closeAllReady = async () => {
-    const readyOrders = lastOrders.filter(o => o.status === 'ready');
-    if(readyOrders.length === 0) return;
-    if(!confirm(`${readyOrders.length} kész rendelést lezársz?`)) return;
-    const batch = writeBatch(db);
-    readyOrders.forEach(o => batch.update(doc(db,'orders',o.id),{status:'handed'}));
-    await batch.commit();
+  // ── Össztörlés ────────────────────────────────────────
+  window.deleteAllOrders = async () => {
+    if(lastOrders.length === 0) { alert('Nincs törölhető rendelés.'); return; }
+    if(!confirm(`Biztosan törlöd az összes mai rendelést? (${lastOrders.length} db)\nEzt nem lehet visszavonni!`)) return;
+    await Promise.all(lastOrders.map(o => updateDoc(doc(db,'orders',o.id),{status:'deleted'})));
+  };
+
+  // ── Rendelés zárása toggle ────────────────────────────
+  let ordersClosed = false;
+
+  function renderClosedBtn() {
+    const btn  = document.getElementById('orders-close-btn');
+    const icon = document.getElementById('orders-close-icon');
+    const lbl  = document.getElementById('orders-close-lbl');
+    if(ordersClosed) {
+      btn.classList.remove('orders-open');
+      btn.classList.add('orders-closed');
+      icon.innerHTML = '<i class="fa-solid fa-lock"></i>';
+      lbl.textContent  = 'RENDELÉS ZÁRVA';
+    } else {
+      btn.classList.remove('orders-closed');
+      btn.classList.add('orders-open');
+      icon.innerHTML = '<i class="fa-solid fa-lock-open"></i>';
+      lbl.textContent  = 'RENDELÉS NYITVA';
+    }
+  }
+
+  window.toggleOrdersClosed = async () => {
+    ordersClosed = !ordersClosed;
+    await setDoc(cfgRef, { ordersClosed }, { merge: true });
+    renderClosedBtn();
+  };
+
+  // ── Teszt rendelés ────────────────────────────────────
+  const testItems = [
+    [{name:'Smash Sajtburger',desc:'1 húspogácsa, cheddar, titkos szósz',cat:'burger',price:3190,qty:1},
+     {name:'Point Krumpli',desc:'Ropogós sült burgonya',cat:'koret',price:1290,qty:1},
+     {name:'Pepsi',desc:'330 ml',cat:'ital',price:990,qty:1}],
+    [{name:'Point Burger',desc:'2 húspogácsa',cat:'burger',price:3990,qty:2},
+     {name:'Angry Falatok',desc:'Fekete chili cheese',cat:'koret',price:2390,qty:1}],
+    [{name:'Gold Smash',desc:'Rántott cheddar, chutney',cat:'special',price:6350,qty:1},
+     {name:'Hagymakarika',desc:'6 darab',cat:'koret',price:1590,qty:1},
+     {name:'7UP',desc:'330 ml',cat:'ital',price:990,qty:2}],
+  ];
+  const testNames   = ['Kovács Péter','Nagy Anna','Szabó Gábor','Tóth Éva','Kiss Norbert'];
+  const testPhones  = ['+36 30 123 4567','+36 70 987 6543','+36 20 555 1234'];
+  const testAddrs   = ['Liszt Ferenc utca 10.','Kossuth utca 5.','Petőfi utca 22.'];
+  const testTypes   = ['takeaway','takeaway','delivery'];
+  const testPays    = ['cash','card','szep'];
+  let   testCounter = 0;
+
+  window.createTestOrder = async () => {
+    const btn = document.getElementById('test-btn');
+    btn.textContent = '...';
+    btn.disabled = true;
+    try {
+      const counterRef = doc(db,'settings','orderCounter');
+      let num;
+      await runTransaction(db, async tx => {
+        const snap = await tx.get(counterRef);
+        num = snap.exists() ? snap.data().value + 1 : 1;
+        tx.set(counterRef,{value:num});
+      });
+
+      const idx   = testCounter % testItems.length;
+      const tIdx  = testCounter % testTypes.length;
+      const items = testItems[idx].map(i=>({...i,id:i.name.toLowerCase().replace(/ /g,'_')}));
+      const total = items.reduce((s,i)=>s+i.price*i.qty,0);
+      const type  = testTypes[tIdx];
+
+      await addDoc(collection(db,'orders'),{
+        orderNumber: `SP-${String(num).padStart(3,'0')}`,
+        status:      'new',
+        type,
+        customer: {
+          name:  testNames[testCounter % testNames.length],
+          phone: testPhones[testCounter % testPhones.length],
+          ...(type==='delivery' ? {address: testAddrs[testCounter % testAddrs.length]} : {})
+        },
+        payment: testPays[testCounter % testPays.length],
+        items,
+        total,
+        notes: testCounter % 3 === 0 ? 'Extra szósz kérem!' : '',
+        createdAt: serverTimestamp()
+      });
+      testCounter++;
+    } catch(e) { console.error(e); }
+    btn.textContent = 'Teszt';
+    btn.disabled = false;
   };
 
   // ── Advance ───────────────────────────────────────────
@@ -812,7 +1075,7 @@
     const typeCls   = isBejovos ? 't-bejovos' : 't-futar';
     const typeTxt   = isBejovos ? 'Bejövős'   : 'Futár';
     const expanded  = expandedIds.has(o.id);
-    const payLabels = {cash:'💵 Készpénz', card:'💳 Bankkártya', szep:'🎴 SZÉP kártya'};
+    const payLabels = {cash:'<i class="fa-solid fa-money-bill-wave"></i> Készpénz', card:'<i class="fa-solid fa-credit-card"></i> Bankkártya', szep:'<i class="fa-solid fa-id-card"></i> SZÉP kártya'};
     const payCls    = {cash:'pay-cash', card:'pay-card', szep:'pay-szep'};
 
     let actionBtn = '';
@@ -851,29 +1114,29 @@
 
     const details = `
       <div class="o-details ${expanded?'open':''}">
-        <div class="o-section-title">🍴 RENDELT TÉTELEK</div>
+        <div class="o-section-title"><i class="fa-solid fa-utensils"></i> RENDELT TÉTELEK</div>
         ${itemsHTML}
         ${summaryParts.length ? `<div class="o-summary">Összesen ${summaryParts.join(' ')}</div>` : ''}
 
         ${o.type==='delivery' ? `
         <div class="o-delivery-box" style="margin-top:0.6rem;">
-          <div class="o-delivery-title">📍 SZÁLLÍTÁSI ADATOK</div>
-          ${o.customer?.address ? `<div class="o-delivery-row"><span class="o-delivery-icon">📍</span>${o.customer.address}</div>` : ''}
-          ${o.customer?.phone   ? `<div class="o-delivery-row"><span class="o-delivery-icon">📞</span>${o.customer.phone}</div>` : ''}
+          <div class="o-delivery-title"><i class="fa-solid fa-location-dot"></i> SZÁLLÍTÁSI ADATOK</div>
+          ${o.customer?.address ? `<div class="o-delivery-row"><span class="o-delivery-icon"><i class="fa-solid fa-location-dot"></i></span>${o.customer.address}</div>` : ''}
+          ${o.customer?.phone   ? `<div class="o-delivery-row"><span class="o-delivery-icon"><i class="fa-solid fa-phone"></i></span>${o.customer.phone}</div>` : ''}
         </div>` : `
         <div style="font-size:0.78rem;color:var(--muted);margin-top:0.5rem;">
-          👤 ${o.customer?.name||'–'} &nbsp;·&nbsp; 📞 ${o.customer?.phone||'–'}
+          <i class="fa-solid fa-user"></i> ${o.customer?.name||'–'} &nbsp;·&nbsp; <i class="fa-solid fa-phone"></i> ${o.customer?.phone||'–'}
         </div>`}
 
-        ${o.notes ? `<div class="o-notes-row" style="margin-top:0.4rem;">📝 ${o.notes}</div>` : ''}
+        ${o.notes ? `<div class="o-notes-row" style="margin-top:0.4rem;"><i class="fa-solid fa-note-sticky"></i> ${o.notes}</div>` : ''}
 
         <div class="o-action-row">
-          ${canDelete ? `<button class="btn-delete" onclick="deleteOrder('${o.id}','${o.orderNumber}')">✕ Töröl</button>` : ''}
-          ${canRevert ? `<button class="btn-revert" onclick="revertOrder('${o.id}','${o.status}')">↩ Visszavon</button>` : ''}
+          ${canDelete ? `<button class="btn-delete" onclick="deleteOrder('${o.id}','${o.orderNumber}')"><i class="fa-solid fa-xmark"></i> Töröl</button>` : ''}
+          ${canRevert ? `<button class="btn-revert" onclick="revertOrder('${o.id}','${o.status}')"><i class="fa-solid fa-rotate-left"></i> Visszavon</button>` : ''}
           <span class="o-action-spacer"></span>
           <div style="display:flex;align-items:center;gap:0.5rem;">
             <span style="font-family:'Oswald',sans-serif;font-size:0.95rem;font-weight:700;color:var(--pink);">${fmt(o.total)}</span>
-            <span class="pay-badge ${payCls[o.payment]||'pay-cash'}" style="font-size:0.62rem;padding:0.1rem 0.4rem;border-radius:4px;border:1px solid;">${payLabels[o.payment]||'💵 Készpénz'}</span>
+            <span class="pay-badge ${payCls[o.payment]||'pay-cash'}" style="font-size:0.62rem;padding:0.1rem 0.5rem;border-radius:4px;border:1px solid;display:inline-flex;align-items:center;gap:0.3rem;">${payLabels[o.payment]||'<i class="fa-solid fa-money-bill-wave"></i> Készpénz'}</span>
           </div>
         </div>
       </div>`;
@@ -884,12 +1147,13 @@
           <span class="o-dot"></span>
           <span class="o-num">#${o.orderNumber?.replace('SP-','')||'?'}</span>
           <span class="o-type ${typeCls}">${typeTxt}</span>
+          <span class="pay-badge ${payCls[o.payment]||'pay-cash'}" style="font-size:0.58rem;padding:0.1rem 0.45rem;border-radius:4px;border:1px solid;display:inline-flex;align-items:center;gap:0.25rem;">${payLabels[o.payment]||'<i class="fa-solid fa-money-bill-wave"></i> Készpénz'}</span>
           <span class="o-time ${urgent?'urgent-t':''}">
             ⏱ ${elapsed(o.createdAt)}
-            ${urgent?'<span class="o-warn red">▲</span>':'<span class="o-warn">▲</span>'}
+            ${urgent?'<span class="o-warn red"><i class="fa-solid fa-triangle-exclamation"></i></span>':'<span class="o-warn"><i class="fa-solid fa-triangle-exclamation"></i></span>'}
           </span>
           <span class="o-spacer"></span>
-          <button class="o-expand ${expanded?'open':''}" onclick="toggleExpand('${o.id}')" title="Részletek">∨</button>
+          <button class="o-expand ${expanded?'open':''}" onclick="toggleExpand('${o.id}')" title="Részletek"><i class="fa-solid fa-chevron-down"></i></button>
           ${actionBtn}
         </div>
         ${details}
@@ -909,17 +1173,10 @@
       const key = map[status];
       const el  = document.getElementById(`cards-${key}`);
       el.innerHTML = list.length
-        ? list.map(orderRow).join('') + '<div class="scroll-hint">↓ VAN MÉG LENT</div>'
-        : '<div class="col-empty">Nincs aktív rendelés</div>';
+        ? list.map(orderRow).join('')
+        : `<div class="col-empty">Nincs aktív rendelés</div>`;
       document.getElementById(`cnt-${key}`).textContent = list.length;
 
-      // Scroll hint
-      if(el.scrollHeight > el.clientHeight) el.classList.add('has-more');
-      else el.classList.remove('has-more');
-      el.addEventListener('scroll', () => {
-        const atBottom = el.scrollHeight - el.scrollTop < el.clientHeight + 30;
-        if(atBottom) el.classList.remove('has-more'); else el.classList.add('has-more');
-      }, {passive:true});
     });
 
     // Stats
@@ -956,7 +1213,38 @@
 
   onSnapshot(q, snap => {
     renderOrders(snap.docs.map(d=>({id:d.id,...d.data()})));
+    setTimeout(updatePills, 200);
   });
+
+  // ── Scroll pills (fixed position) ─────────────────────
+  function updatePills() {
+    ['new','prep','ready','handed'].forEach(key => {
+      const cards = document.getElementById(`cards-${key}`);
+      const aboveEl = document.getElementById(`above-${key}`);
+      const belowEl = document.getElementById(`below-${key}`);
+      if(!cards || !aboveEl || !belowEl) return;
+
+      const rect     = cards.getBoundingClientRect();
+      const hasAbove = cards.scrollTop > 20;
+      const hasBelow = cards.scrollHeight - cards.scrollTop - cards.clientHeight > 20;
+      const cx       = rect.left + rect.width / 2;
+
+      aboveEl.style.display = hasAbove ? 'block' : 'none';
+      aboveEl.style.left    = cx + 'px';
+      aboveEl.style.top     = (rect.top + 8) + 'px';
+
+      belowEl.style.display = hasBelow ? 'block' : 'none';
+      belowEl.style.left    = cx + 'px';
+      belowEl.style.top     = (rect.bottom - 34) + 'px';
+    });
+  }
+
+  ['new','prep','ready','handed'].forEach(key => {
+    const el = document.getElementById(`cards-${key}`);
+    if(el) el.addEventListener('scroll', updatePills, {passive:true});
+  });
+
+  setInterval(updatePills, 400);
 
   // ── Mobile tabs ───────────────────────────────────────
   window.mobTab = (key, btn) => {
