@@ -185,7 +185,6 @@
   </div>
   <div class="hdr-right">
     <a href="kds.html" class="back-btn"><i class="fa-solid fa-display"></i> KDS</a>
-    <a href="index.html" class="back-btn"><i class="fa-solid fa-globe"></i> Weboldal</a>
   </div>
 </div>
 
@@ -294,6 +293,35 @@
           <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:#93c5fd;" id="delivery-pct">–</div>
         </div>
       </div>
+
+      <!-- Fizetési módok -->
+      <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--border);">
+        <div class="section-title" style="font-size:0.9rem;margin-bottom:0.75rem;">
+          <i class="fa-solid fa-credit-card"></i> Fizetési módok
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center;">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;"><i class="fa-solid fa-money-bill-wave" style="color:var(--green);margin-right:0.3rem;"></i>Készpénz</div>
+            <div class="bar-track"><div class="bar-fill" id="pay-cash-bar" style="width:0%;background:linear-gradient(90deg,#059669,var(--green));"></div></div>
+          </div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:var(--green);" id="pay-cash-pct">–</div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center;margin-top:0.5rem;">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;"><i class="fa-solid fa-credit-card" style="color:#93c5fd;margin-right:0.3rem;"></i>Bankkártya</div>
+            <div class="bar-track"><div class="bar-fill" id="pay-card-bar" style="width:0%;background:linear-gradient(90deg,#3b82f6,#6366f1);"></div></div>
+          </div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:#93c5fd;" id="pay-card-pct">–</div>
+        </div>
+        <div style="display:flex;gap:1rem;align-items:center;margin-top:0.5rem;">
+          <div style="flex:1;">
+            <div style="font-size:0.75rem;color:var(--muted);margin-bottom:0.3rem;"><i class="fa-solid fa-id-card" style="color:var(--yellow);margin-right:0.3rem;"></i>SZÉP kártya</div>
+            <div class="bar-track"><div class="bar-fill" id="pay-szep-bar" style="width:0%;background:linear-gradient(90deg,#d97706,var(--yellow));"></div></div>
+          </div>
+          <div style="font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:700;color:var(--yellow);" id="pay-szep-pct">–</div>
+        </div>
+      </div>
+
     </div>
 
   </div>
@@ -434,6 +462,19 @@
         <div class="bar-track"><div class="bar-fill" style="width:${Math.round((qty/maxQ)*100)}%"></div></div>
         <div class="bar-val">${qty}x</div>
       </div>`).join('') : '<div style="color:var(--muted);font-size:0.82rem;">Nincs adat a kiválasztott időszakra.</div>';
+
+    // Fizetési módok
+    const payCash = orders.filter(o=>o.payment==='cash').length;
+    const payCard = orders.filter(o=>o.payment==='card').length;
+    const paySzep = orders.filter(o=>o.payment==='szep').length;
+    const setPayBar = (id, pctId, count, color) => {
+      const pct = total ? Math.round(count/total*100) : 0;
+      document.getElementById(id).style.width = pct + '%';
+      document.getElementById(pctId).textContent = total ? pct + '%' : '–';
+    };
+    setPayBar('pay-cash-bar','pay-cash-pct', payCash);
+    setPayBar('pay-card-bar','pay-card-pct', payCard);
+    setPayBar('pay-szep-bar','pay-szep-pct', paySzep);
 
     // Elvitel vs. szállítás
     const takeaway = orders.filter(o=>o.type==='takeaway').length;
